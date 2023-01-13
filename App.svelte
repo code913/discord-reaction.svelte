@@ -1,6 +1,7 @@
 <script>
 	import { tweened } from "svelte/motion";
 	import * as svelteEasings from "svelte/easing";
+	import { onMount } from "svelte";
 	import Reaction from "./Reaction.svelte";
 	
 	const linear = t => t;
@@ -14,16 +15,27 @@
 			overflow = false,
 			addAmount = 10,
 			incrementBy = 1;
+	
+	onMount(() => {
+		for (let [, store] of emojis) {
+			setTimeout(() => store.update(c => c + Math.round(Math.random() * 4) - 2), Math.round(Math.random() * 2500));
+		}
+	});
 </script>
 
-<div class="flex">
-	{#each emojis as [emoji, count] (emoji)}
-		<Reaction {count} {speed} {easing} {overflow}>
-			<!-- you should use a twemoji <img> -->
-			<svelte:fragment slot="emoji">{emoji}</svelte:fragment>
-		</Reaction>
-	{/each}
-</div>
+<article class="message">
+	<p>code913: svelte is a really nice framework</p>
+	<ul class="reactions">
+		{#each emojis as [emoji, count] (emoji)}
+			<li>
+				<Reaction {count} {speed} {easing}>
+					<!-- you should use a twemoji <img> -->
+					<svelte:fragment slot="emoji">{emoji}</svelte:fragment>
+				</Reaction>
+			</li>
+		{/each}
+	</ul>
+</article>
 <fieldset>
 	<legend>Controls</legend>
 	<label>
@@ -70,15 +82,21 @@
 	/* check Reaction.svelte for the actual code */
 	
 	/* just to look good */
+	:global(html) {
+		font-size: min(5vh, 32px);
+	}
+	
 	:global(body) {
 		--dark: #36393f;
 		--light: #dcddde;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
 		align-items: center;
+		text-align: center;
+		padding-block: 2.5rem;
 		gap: 1.5rem;
 		min-height: 100vh;
+		overflow: auto;
 		color: var(--light);
 		background: var(--dark);
 	}
@@ -87,11 +105,21 @@
 		padding: 1ch 2ch;
 	}
 	
-	.flex {
+	.message {
+		text-align: start;
+	}
+	
+	.reactions {
 		display: flex;
-		gap: 2ch;
+		margin-top: 0.5ch;
+		gap: 0.5ch;
 		align-items: center;
-		justify-content: center;
+		justify-content: start;
+		list-style-type: none;
+	}
+	
+	:global(button):where(:focus, :focus-within, :focus-within) {
+		outline: revert;
 	}
 	
 	/* css resets */
