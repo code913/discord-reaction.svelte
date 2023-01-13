@@ -23,10 +23,12 @@
 </button>
 <style>
 	.reaction {
-		--height: 2rem;
-		--border-width: 0.125em;
-		background-color: var(--dark);
+		--height: 1.5rem;
+		--border-width: 1px;
+		--border-color: transparent;
+		--background-color: #2f3136;
 		color: var(--light);
+		font-size: 0.75rem;
 		
 		display: flex;
 		align-items: center;
@@ -38,22 +40,28 @@
 		margin: 0;
 		gap: 0.5ch;
 
-		border-color: var(--light);
+		border-color: var(--border-color);
 		border-width: var(--border-width);
 		border-radius: 0.5em;
-		transition: border 0.25s;
+		transition-property: border, background-color;
+		transition-duration: 0.25s;
 	}
-	
+
 	/* for some reason when i click on the reaction */
 	/* in firefox there's a flash of white background */
-	.reaction:focus, .reaction:hover {
-		background-color: var(--dark);
-		/* set your own */
-		outline: revert;
+	/* hence the :active */
+	.reaction, .reaction:active {
+		background-color: var(--background-color);
+	}
+	
+	.reaction:not(.reaction--reacted):where(:focus-visible, :hover) {
+		--border-color: #5e6165;
+		--background-color: #36393f;
 	}
 	
 	.reaction--reacted {
-		border-color: #5865f2;
+		--border-color: #5865f2;
+		--background-color: #3b405a;
 	}
 
 	.reaction__count-container {
